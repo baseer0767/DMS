@@ -8,4 +8,4 @@ pinecone-client
 python-dotenv
 requests
 sqlalchemy
-psycopg2
+psycopg2-binary
