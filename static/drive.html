@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Google Drive Metadata</title>
+</head>
+<body>
+  <h1>Google Drive Sync</h1>
+  <button id="authorize_button">Authorize Google Drive</button>
+  <button id="signout_button" style="display:none;">Sign Out</button>
+
+  <!-- Drive logic -->
+  <script src="/static/js/drive.js"></script>
+
+  <!-- Google APIs -->
+  <script src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
+  <script src="https://accounts.google.com/gsi/client" onload="gisLoaded()" async defer></script>
+  
+  <!-- Drive logic -->
+  <script src="/static/js/drive.js"></script>
+</body>
+</html>

@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enterprise DMS | Document Management System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary: #3f37c9;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+            --success: #4cc9f0;
+            --warning: #f8961e;
+            --danger: #f72585;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f7fb;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 280px;
+            background: white;
+            box-shadow: var(--box-shadow);
+            padding: 1.5rem 0;
+            transition: var(--transition);
+            z-index: 100;
+        }
+
+        .sidebar-header {
+            padding: 0 1.5rem 1.5rem;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .sidebar-header h2 {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--primary);
+        }
+
+        .sidebar-header h2 i {
+            font-size: 1.5rem;
+        }
+
+        .sidebar-menu {
+            padding: 1rem 0;
+        }
+
+        .menu-title {
+            padding: 0.5rem 1.5rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--gray);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            color: var(--dark);
+            text-decoration: none;
+            transition: var(--transition);
+            border-left: 3px solid transparent;
+        }
+
+        .menu-item:hover {
+            background-color: rgba(67, 97, 238, 0.1);
+            color: var(--primary);
+        }
+
+        .menu-item.active {
+            background-color: rgba(67, 97, 238, 0.1);
+            color: var(--primary);
+            border-left: 3px solid var(--primary);
+        }
+
+        .menu-item i {
+            margin-right: 0.75rem;
+            font-size: 1.1rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            margin-top: auto;
+            border-top: 1px solid var(--light-gray);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 0.75rem;
+            font-weight: 600;
+        }
+
+        .user-info h4 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.1rem;
+        }
+
+        .user-info p {
+            font-size: 0.75rem;
+            color: var(--gray);
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.6rem 1.25rem;
+            border-radius: var(--border-radius);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--gray);
+            color: var(--dark);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--light-gray);
+        }
+
+        .search-bar {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-bottom: 2rem;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 0.75rem 1.25rem 0.75rem 3rem;
+            border-radius: var(--border-radius);
+            border: 1px solid var(--light-gray);
+            font-size: 0.95rem;
+            transition: var(--transition);
+            background-color: white;
+        }
+
+        .search-bar input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+
+        .search-bar i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+        }
+
+        .filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-item {
+            padding: 0.5rem 1rem;
+            background-color: white;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 1px solid var(--light-gray);
+        }
+
+        .filter-item:hover, .filter-item.active {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .documents-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .document-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+        }
+
+        .document-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .document-preview {
+            height: 180px;
+            background-color: var(--light-gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .document-preview img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .document-preview .file-icon {
+            font-size: 3rem;
+            color: var(--gray);
+        }
+
+        .document-preview .preview-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .document-card:hover .preview-overlay {
+            opacity: 1;
+        }
+
+        .preview-overlay .btn {
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+        }
+
+        .document-info {
+            padding: 1.25rem;
+        }
+
+        .document-info h3 {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .document-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--gray);
+            margin-bottom: 0.75rem;
+        }
+
+        .document-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .tag {
+            background-color: rgba(67, 97, 238, 0.1);
+            color: var(--primary);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 500;
+        }
+
+        .document-actions {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 0.5rem;
+            border-radius: var(--border-radius);
+            background-color: var(--light-gray);
+            color: var(--dark);
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+        }
+
+        .action-btn:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        /* Modal Styles */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: var(--border-radius);
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow: hidden;
+            transform: translateY(-50px);
+            transition: var(--transition);
+        }
+
+        .modal.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--light-gray);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .modal-header .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray);
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+            overflow-y: auto;
+            max-height: 70vh;
+        }
+
+        .modal-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--light-gray);
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
+        }
+
+        /* Upload Modal */
+        .upload-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .upload-option {
+            border: 2px dashed var(--light-gray);
+            border-radius: var(--border-radius);
+            padding: 2rem 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .upload-option:hover {
+            border-color: var(--primary);
+            background-color: rgba(67, 97, 238, 0.05);
+        }
+
+        .upload-option i {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .upload-option h4 {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .upload-option p {
+            font-size: 0.85rem;
+            color: var(--gray);
+        }
+
+        .dropzone {
+            border: 2px dashed var(--light-gray);
+            border-radius: var(--border-radius);
+            padding: 3rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            transition: var(--transition);
+        }
+
+        .dropzone.active {
+            border-color: var(--primary);
+            background-color: rgba(67, 97, 238, 0.05);
+        }
+
+        .dropzone i {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .dropzone h4 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .dropzone p {
+            color: var(--gray);
+            margin-bottom: 1rem;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        /* Document Preview Modal */
+        .document-preview-modal .modal-content {
+            max-width: 900px;
+        }
+
+        .preview-container {
+            height: 70vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .preview-toolbar {
+            padding: 0.75rem 1rem;
+            background-color: var(--light-gray);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .preview-toolbar .document-name {
+            font-weight: 600;
+        }
+
+        .toolbar-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .toolbar-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--gray);
+            font-size: 1rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+        }
+
+        .toolbar-btn:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+
+        .preview-content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f5f5f5;
+            overflow: auto;
+        }
+
+        .preview-content iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 240px;
+            }
+            
+            .upload-options {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+                padding: 1rem 0;
+            }
+            
+            .sidebar-menu {
+                display: flex;
+                overflow-x: auto;
+                padding: 0.5rem 0;
+            }
+            
+            .menu-group {
+                display: flex;
+            }
+            
+            .menu-item {
+                white-space: nowrap;
+                border-left: none;
+                border-bottom: 3px solid transparent;
+            }
+            
+            .menu-item.active {
+                border-left: none;
+                border-bottom: 3px solid var(--primary);
+            }
+            
+            .user-profile {
+                display: none;
+            }
+            
+            .documents-grid {
+                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            }
+        }
+
+        @media (max-width: 576px) {
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .header-actions {
+                width: 100%;
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .document-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-folder-open"></i> Enterprise DMS</h2>
+            </div>
+            
+            <nav class="sidebar-menu">
+                <div class="menu-group">
+                    <div class="menu-title">Main</div>
+                    <a href="#" class="menu-item active">
+                        <i class="fas fa-home"></i> Dashboard
+                    </a>
+                    <a href="#" class="menu-item">
+                        <i class="fas fa-folder"></i> My Documents
+                    </a>
+                    <a href="#" class="menu-item">
+                        <i class="fas fa-users"></i> Shared with Me
+                    </a>
+                    <a href="#" class="menu-item">
+                        <i class="fas fa-clock"></i> Recent
+                    </a>
+                    <a href="#" class="menu-item">
+                        <i class="fas fa-star"></i> Starred
+                    </a>
+                    <a href="#" class="menu-item">
+                        <i class="fas fa-trash"></i> Trash
+                    </a>
+                </div>
+                
+                <div class="menu-group">
+                    <div class="menu-title">Teams</div>
+                    <a href="#" class="menu-item">
+                        <i class="fas fa-users"></i> Marketing
+                    </a>
+                    <a href="#" class="menu-item">
+                        <i class="fas fa-users"></i> Development
+                    </a>
+                    <a href="#" class="menu-item">
+                        <i class="fas fa-users"></i> Finance
+                    </a>
+                </div>
+                
+                <div class="menu-group">
+                    <div class="menu-title">Admin</div>
+                    <a href="#" class="menu-item">
+                        <i class="fas fa-cog"></i> Settings
+                    </a>
+                    <a href="#" class="menu-item">
+                        <i class="fas fa-user-shield"></i> User Management
+                    </a>
+                    <a href="#" class="menu-item">
+                        <i class="fas fa-chart-bar"></i> Analytics
+                    </a>
+                </div>
+            </nav>
+            
+            <div class="user-profile">
+                <div class="user-avatar">JD</div>
+                <div class="user-info">
+                    <h4>John Doe</h4>
+                    <p>Admin</p>
+                </div>
+            </div>
+        </aside>
+        
+<!-- ========================== MAIN CONTENT ========================== -->
+<main class="main-content">
+
+    <!-- ===== Top Header (Title & Action Buttons) ===== -->
+    <div class="header">
+        <h1>Document Dashboard</h1>
+        <div class="header-actions">
+            <button class="btn btn-outline">
+                <i class="fas fa-filter"></i> Filters
+            </button>
+            <button class="btn btn-primary" id="uploadBtn">
+                <i class="fas fa-upload"></i> Upload
+            </button>
+        </div>
+    </div>
+
+    <!-- ===== Search Bar ===== -->
+    <div class="search-bar">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Search documents by name, content or tags...">
+    </div>
+
+    <!-- ===== Filter Tabs ===== -->
+    <div class="filters">
+        <div class="filter-item active">All Documents</div>
+        <div class="filter-item">PDF</div>
+        <div class="filter-item">Word</div>
+        <div class="filter-item">Excel</div>
+        <div class="filter-item">PowerPoint</div>
+        <div class="filter-item">Images</div>
+        <div class="filter-item">Last 7 Days</div>
+        <div class="filter-item">Shared</div>
+    </div>
+
+    <!-- ===== Document Grid ===== -->
+    <div class="documents-grid">
+
+        <!-- Existing document cards go here -->
+        <!-- Example Document Card (Can be duplicated for each document) -->
+        <!--
+        <div class="document-card">
+            <div class="document-icon"><i class="fas fa-file-pdf"></i></div>
+            <div class="document-name">Example.pdf</div>
+        </div>
+        -->
+
+        <!-- Google Drive Files Will Be Injected Here -->
+        <div id="drive-documents-section"></div>
+    </div>
+</main>
+
+<!-- ========================== UPLOAD MODAL ========================== -->
+<div class="modal" id="uploadModal">
+    <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+            <h3>Upload Documents</h3>
+            <button class="close-btn" onclick="closeModal('uploadModal')">&times;</button>
+        </div>
+
+        <!-- Modal Body -->
+        <div class="modal-body">
+
+            <!-- Upload Options (Local, OneDrive, Google Drive) -->
+            <div class="upload-options">
+                <div class="upload-option" onclick="selectUploadOption('computer')">
+                    <i class="fas fa-desktop"></i>
+                    <h4>My Computer</h4>
+                    <p>Upload from your device</p>
+                </div>
+                <div class="upload-option" onclick="selectUploadOption('onedrive')">
+                    <i class="fab fa-microsoft"></i>
+                    <h4>OneDrive</h4>
+                    <p>Import from OneDrive</p>
+                </div>
+                <div class="upload-option" id="googleDriveBtn">
+                    <i class="fab fa-google-drive"></i>
+                    <h4>Google Drive</h4>
+                    <p>Import from Google Drive</p>
+                </div>
+            </div>
+
+            <!-- Dropzone for Drag & Drop Upload -->
+            <div class="dropzone" id="dropzone">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <h4>Drag & Drop files here</h4>
+                <p>or</p>
+                <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()">
+                    <i class="fas fa-folder-open"></i> Browse Files
+                </button>
+                <input type="file" id="fileInput" class="file-input" multiple>
+            </div>
+
+            <!-- Upload Settings -->
+            <div>
+                <h4>Upload Settings</h4>
+                <div style="margin-top: 1rem;">
+                    <label style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
+                        <input type="checkbox" checked> Extract text for search
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
+                        <input type="checkbox" checked> Auto-tag documents
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 0.5rem;">
+                        <input type="checkbox"> Notify team members
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="modal-footer">
+            <button class="btn btn-outline" onclick="closeModal('uploadModal')">Cancel</button>
+            <button class="btn btn-primary">Upload</button>
+        </div>
+    </div>
+</div>
+
+<!-- ========================== DOCUMENT PREVIEW MODAL ========================== -->
+<div class="modal document-preview-modal" id="previewModal">
+    <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+            <h3 id="previewTitle">Document Preview</h3>
+            <button class="close-btn" onclick="closeModal('previewModal')">&times;</button>
+        </div>
+
+        <!-- Document Preview Body -->
+        <div class="preview-container">
+
+            <!-- Toolbar with filename and actions -->
+            <div class="preview-toolbar">
+                <div class="document-name" id="previewFileName">Document.pdf</div>
+                <div class="toolbar-actions">
+                    <button class="toolbar-btn"><i class="fas fa-download"></i></button>
+                    <button class="toolbar-btn"><i class="fas fa-print"></i></button>
+                    <button class="toolbar-btn"><i class="fas fa-share"></i></button>
+                    <button class="toolbar-btn"><i class="fas fa-ellipsis-h"></i></button>
+                </div>
+            </div>
+
+            <!-- Document Iframe Viewer -->
+            <div class="preview-content">
+                <iframe id="previewFrame" src="about:blank"></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+<!-- Load Google API & Identity Services -->
+<script src="https://apis.google.com/js/api.js"></script>
+<script src="https://accounts.google.com/gsi/client"></script>
+
+<script>
+    // ========================= UI & MODAL LOGIC =========================
+
+    // Show the Upload Modal
+    document.getElementById('uploadBtn').addEventListener('click', () => {
+        document.getElementById('uploadModal').classList.add('active');
+    });
+
+    // Close any modal by ID
+    function closeModal(modalId) {
+        document.getElementById(modalId).classList.remove('active');
+    }
+
+    // Open document preview modal
+    function openPreviewModal(filename) {
+        document.getElementById('previewFileName').textContent = filename;
+        document.getElementById('previewTitle').textContent = filename;
+
+        // Inject placeholder preview HTML into iframe
+        document.getElementById('previewFrame').srcdoc = `
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title>${filename}</title>
+                <style>
+                    body {
+                        font-family: Arial, sans-serif;
+                        padding: 2rem;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        height: 100vh;
+                        margin: 0;
+                        background-color: #f5f5f5;
+                    }
+                    .preview-placeholder {
+                        text-align: center;
+                        color: #666;
+                    }
+                    .preview-placeholder i {
+                        font-size: 3rem;
+                        margin-bottom: 1rem;
+                        color: #4361ee;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="preview-placeholder">
+                    <i class="fas fa-file-pdf"></i>
+                    <h2>${filename}</h2>
+                    <p>This is a preview placeholder. Actual document content would appear here.</p>
+                </div>
+            </body>
+            </html>
+        `;
+        document.getElementById('previewModal').classList.add('active');
+    }
+
+    // Highlight selected upload option
+    function selectUploadOption(option) {
+        document.querySelectorAll('.upload-option').forEach(opt => {
+            opt.style.borderColor = '#e9ecef';
+        });
+        const selected = document.querySelector(`.upload-option[onclick="selectUploadOption('${option}')"]`);
+        if (selected) selected.style.borderColor = '#4361ee';
+    }
+
+    // Drag & Drop file handling
+    const dropzone = document.getElementById('dropzone');
+    const fileInput = document.getElementById('fileInput');
+
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropzone.addEventListener(eventName, preventDefaults, false);
+    });
+
+    function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
+    ['dragenter', 'dragover'].forEach(eventName => {
+        dropzone.addEventListener(eventName, () => dropzone.classList.add('active'), false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+        dropzone.addEventListener(eventName, () => dropzone.classList.remove('active'), false);
+    });
+
+    dropzone.addEventListener('drop', e => {
+        const dt = e.dataTransfer;
+        fileInput.files = dt.files;
+        console.log('Files dropped:', dt.files);
+    });
+
+    fileInput.addEventListener('change', () => {
+        if (fileInput.files.length > 0) {
+            console.log('Files selected:', fileInput.files);
+        }
+    });
+
+    // Toggle sidebar (if applicable)
+    function toggleMenu() {
+        const sidebar = document.querySelector('.sidebar');
+        sidebar?.classList.toggle('active');
+    }
+
+    // ========================= GOOGLE DRIVE INTEGRATION =========================
+
+    const CLIENT_ID = '246107059333-ouui971jmj2avu0bvfc2al6u3ql2aj0l.apps.googleusercontent.com';
+    const API_KEY = 'AIzaSyBRiEHyLj68UIm2Nt4NmWg62QnOyJ_EunQ';
+    const SCOPES = 'https://www.googleapis.com/auth/drive.readonly';
+
+    let tokenClient;
+    let gapiInited = false;
+    let gisInited = false;
+
+    // Google Drive button click logic
+    document.getElementById('googleDriveBtn').addEventListener('click', () => {
+        if (gapiInited && gisInited) {
+            tokenClient.callback = async (resp) => {
+                if (resp.error) {
+                    console.error('Token Error:', resp);
+                    return;
+                }
+                await listDriveFiles(); // Fetch and render Drive files
+                closeModal('uploadModal'); // Close upload modal after success
+            };
+            tokenClient.requestAccessToken({ prompt: 'consent' });
+        } else {
+            alert('Google Drive SDK not loaded properly.');
+        }
+    });
+
+    // Load GAPI client
+    function gapiLoaded() {
+        gapi.load('client', async () => {
+            await gapi.client.init({
+                apiKey: API_KEY,
+                discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'],
+            });
+            gapiInited = true;
+        });
+    }
+
+    // Load Google Identity Services
+    function gisLoaded() {
+        tokenClient = google.accounts.oauth2.initTokenClient({
+            client_id: CLIENT_ID,
+            scope: SCOPES,
+            callback: '', // Will be defined on button click
+        });
+        gisInited = true;
+    }
+
+    // Fetch and render Drive files
+    async function listDriveFiles() {
+        try {
+            const res = await gapi.client.drive.files.list({
+                pageSize: 10,
+                fields: 'files(id, name, mimeType, webViewLink, iconLink)',
+            });
+
+            const files = res.result.files || [];
+            const container = document.getElementById('drive-documents-section');
+            container.innerHTML = ''; // Clear previous files
+
+            files.forEach(file => {
+                const card = document.createElement('div');
+                card.className = 'document-card';
+
+                card.innerHTML = `
+                    <div class="document-preview">
+                        <img src="${file.iconLink}" alt="Drive file icon">
+                        <div class="preview-overlay">
+                            <a class="btn btn-outline" href="${file.webViewLink}" target="_blank">
+                                <i class="fas fa-eye"></i> Preview
+                            </a>
+                        </div>
+                    </div>
+                    <div class="document-info">
+                        <h3>${file.name}</h3>
+                        <div class="document-meta">
+                            <span>Google Drive</span>
+                        </div>
+                        <div class="document-tags">
+                            <span class="tag">Drive</span>
+                        </div>
+                        <div class="document-actions">
+                            <a class="action-btn" href="${file.webViewLink}" target="_blank">
+                                <i class="fas fa-download"></i> View
+                            </a>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        } catch (err) {
+            console.error('Error listing files:', err);
+        }
+    }
+
+    // Initialize both GAPI and GIS on page load
+    window.onload = () => {
+        gapiLoaded();
+        gisLoaded();
+    };
+</script>
+</body>
+</html>

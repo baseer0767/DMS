@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Enterprise DMS | Document Management System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-folder-open"></i> Enterprise DMS</h2>
+            </div>
+
+            <nav class="sidebar-menu">
+                <div class="menu-group">
+                    <div class="menu-title">Main</div>
+                    <a href="#" class="menu-item active" id="dashboardMenuItem"><i class="fas fa-home"></i> Dashboard</a>
+                    <a href="#" class="menu-item"><i class="fas fa-folder"></i> My Documents</a>
+                    <a href="#" class="menu-item"><i class="fas fa-users"></i> Shared with Me</a>
+                    <a href="#" class="menu-item"><i class="fas fa-clock"></i> Recent</a>
+                    <a href="#" class="menu-item"><i class="fas fa-star"></i> Starred</a>
+                    <a href="#" class="menu-item" id="trashMenuItem"><i class="fas fa-trash"></i> Trash</a>
+                </div>
+
+                <div class="menu-group">
+                    <div class="menu-title">Teams</div>
+                    <a href="#" class="menu-item"><i class="fas fa-users"></i> Marketing</a>
+                    <a href="#" class="menu-item"><i class="fas fa-users"></i> Development</a>
+                    <a href="#" class="menu-item"><i class="fas fa-users"></i> Finance</a>
+                </div>
+
+                <div class="menu-group">
+                    <div class="menu-title">Admin</div>
+                    <a href="#" class="menu-item"><i class="fas fa-cog"></i> Settings</a>
+                    <a href="#" class="menu-item"><i class="fas fa-user-shield"></i> User Management</a>
+                    <a href="#" class="menu-item"><i class="fas fa-chart-bar"></i> Analytics</a>
+                </div>
+            </nav>
+
+            <div class="user-profile" id="userProfile">
+                <div class="user-avatar" id="userAvatar">--</div>
+                <div class="user-info">
+                    <h4 id="userName">Guest</h4>
+                    <p>User</p>
+                </div>
+            </div>
+
+            <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <div class="header">
+                <h1>Document Dashboard</h1>
+                <div class="header-actions">
+                    <button class="btn btn-outline"><i class="fas fa-filter"></i> Filters</button>
+                    <button class="btn btn-primary" id="uploadBtn"><i class="fas fa-upload"></i> Upload</button>
+
+                    <!-- Google Drive Button -->
+                    <button class="btn btn-secondary" id="googleDriveBtn" style="display:none;">
+                        <i class="fab fa-google-drive"></i> Sign in with Google
+                    </button>
+                </div>
+            </div>
+
+            <!-- Search Bar -->
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="Search documents by name, content or tags..." />
+                <div id="searchStatus" style="font-size: 0.9em; color: #666; margin-top: 4px; display:none;">Working on it...</div>
+            </div>
+
+            <!-- Filter Tabs -->
+            <div class="filters">
+                <div class="filter-item active">All Documents</div>
+                <div class="filter-item">PDF</div>
+                <div class="filter-item">Word</div>
+                <div class="filter-item">Excel</div>
+                <div class="filter-item">PowerPoint</div>
+                <div class="filter-item">Images</div>
+                <div class="filter-item">Last 7 Days</div>
+                <div class="filter-item">Shared</div>
+            </div>
+
+            <!-- Document Grid -->
+            <div id="drive-documents-section" class="documents-grid"></div>
+
+            <!-- Back Button -->
+            <div id="backButtonContainer" class="back-button-container" style="display: none; text-align: center; margin-top: 20px;">
+                <button class="btn btn-outline" id="backButton"><i class="fas fa-arrow-left"></i> Back</button>
+            </div>
+        </main>
+
+        <!-- Upload Modal -->
+        <div class="modal" id="uploadModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Upload Documents</h3>
+                    <button class="close-btn" onclick="closeModal('uploadModal')">&times;</button>
+                </div>
+
+                <div class="modal-body">
+                    <!-- Upload Options -->
+                    <div class="upload-options">
+<div class="upload-option" onclick="openFilePicker()">
+    <i class="fas fa-desktop"></i>
+    <h4>My Computer</h4>
+    <p>Upload from your device</p>
+</div>
+                        <div class="upload-option" onclick="selectUploadOption('onedrive')">
+                            <i class="fab fa-microsoft"></i>
+                            <h4>OneDrive</h4>
+                            <p>Import from OneDrive</p>
+                        </div>
+                        <div class="upload-option" id="modalGoogleDriveBtn">
+                            <i class="fab fa-google-drive"></i>
+                            <h4>Google Drive</h4>
+                            <p>Import from Google Drive</p>
+                        </div>
+                    </div>
+
+                    <div class="upload-container">
+                        <div class="dropzone" id="dropzone">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <h4>Drag & Drop files here</h4>
+                            <p>or</p>
+                            <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()">
+                                <i class="fas fa-folder-open"></i> Browse Files
+                            </button>
+                        </div>
+                        <div id="uploadPreviewArea" class="upload-preview-list"></div>
+                    </div>
+
+                    <input type="file" id="fileInput" style="display: none;" multiple />
+                    <input type="file" id="folderInput" style="display: none;" webkitdirectory directory multiple />
+
+                    <!-- Upload Settings -->
+                    <div>
+                        <h4>Upload Settings</h4>
+                        <div style="margin-top: 1rem;">
+                            <label><input type="checkbox" checked /> Extract text for search</label>
+                            <label><input type="checkbox" checked /> Auto-tag documents</label>
+                            <label><input type="checkbox" /> Notify team members</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-outline" id="uploadCancelBtn">Cancel</button>
+                    <button class="btn btn-primary" id="uploadFooterBtn">Upload</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Document Preview Modal -->
+        <div class="modal document-preview-modal" id="previewModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="previewTitle">Document Preview</h3>
+                    <button class="close-btn" onclick="closeModal('previewModal')">&times;</button>
+                </div>
+
+                <div class="preview-container">
+                    <div class="preview-toolbar">
+                        <div class="document-name" id="previewFileName">Document.pdf</div>
+                        <div class="toolbar-actions">
+                            <button class="toolbar-btn" id="previewDownloadBtn"><i class="fas fa-download"></i></button>
+                            <button class="action-btn" id="previewPrintBtn"><i class="fas fa-print"></i></button>
+                            <button class="toolbar-btn" id="previewShareBtn"><i class="fas fa-share"></i></button>
+                            <button class="toolbar-btn ellipsis-btn" id="previewMoreBtn"><i class="fas fa-ellipsis-h"></i></button>
+                        </div>
+                    </div>
+
+                    <div class="preview-content">
+                        <iframe id="previewFrame" src="about:blank"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Preview Template -->
+        <template id="previewTemplate">
+            <html>
+                <head>
+                    <title></title>
+                    <style>
+                        body {
+                            font-family: Arial, sans-serif;
+                            padding: 2rem;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            height: 100vh;
+                            margin: 0;
+                            background-color: #f5f5f5;
+                        }
+                        .preview-placeholder {
+                            text-align: center;
+                            color: #666;
+                        }
+                        .preview-placeholder i {
+                            font-size: 3rem;
+                            margin-bottom: 1rem;
+                            color: #4361ee;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="preview-placeholder">
+                        <i class="fas fa-file-pdf"></i>
+                        <h2></h2>
+                        <p>This is a preview placeholder. Actual document content would appear here.</p>
+                    </div>
+                </body>
+            </html>
+        </template>
+
+        <!-- Share Dropdown -->
+        <div class="share-dropdown" id="shareDropdown">
+            <div class="share-option" data-action="attachment">📎 Send as Attachment</div>
+            <div class="share-option" data-action="gmail">📧 Share to Gmail</div>
+        </div>
+
+        <!-- More Options Dropdown -->
+        <div class="more-dropdown" id="moreDropdown">
+            <div class="more-option" data-action="details">📝 Details</div>
+            <div class="more-option" data-action="delete">🗑️ Delete</div>
+        </div>
+
+        <!-- Loading Overlays -->
+        <div id="previewLoadingOverlay" class="preview-loading-overlay"><span>Loading...</span></div>
+        <div id="backLoadingOverlay" class="loading-overlay" style="display: none;"><span>Loading...</span></div>
+    </div>
+
+    <!-- Scripts at the end of body --> 
+    <script src="/static/js/scripts.js"></script>
+    <script src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
+    <script src="https://accounts.google.com/gsi/client" async defer onload="gisLoaded()"></script>      
+   
+
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const role = sessionStorage.getItem("userRole");
+    const googleBtn = document.getElementById("googleDriveBtn");
+    const modalGoogleBtn = document.getElementById("modalGoogleDriveBtn");
+
+    if (role === "admin") {
+        googleBtn.style.display = "inline-block";
+
+        googleBtn.addEventListener("click", async () => {
+            try {
+                // Run your first logic
+                if (typeof handleScriptJsLogic === "function") await handleScriptJsLogic();
+                else console.error("handleScriptJsLogic() is not defined.");
+
+                // Run your second logic
+               // if (typeof handleDriveJsLogic === "function") await handleDriveJsLogic();
+               // else console.error("handleDriveJsLogic() is not defined.");
+
+            } catch (err) {
+                console.error("Error executing Google Drive logic:", err);
+            }
+        });
+
+    } else {
+        googleBtn.style.display = "none";
+        modalGoogleBtn.style.display = "none";
+    }
+});
+function openFilePicker() {
+  const fileInput = document.getElementById('fileInput');
+  if (fileInput) {
+    fileInput.click(); // Opens system file picker
+  } else {
+    console.error('fileInput element not found!');
+  }
+}
+</script>
+</body>
+</html>
