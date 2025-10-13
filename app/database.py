@@ -1,19 +1,26 @@
+import os
 from sqlalchemy import create_engine, Column, Integer, String, BigInteger, DateTime, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
 from datetime import datetime
+from dotenv import load_dotenv
 
-DATABASE_URL = "postgresql://postgres:G1342s%40g@localhost:5432/myappdb"
+# Load environment variables
+load_dotenv()
+
+DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://postgres:G1342s%40g@localhost:5432/myappdb")
 
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
+
 
 class Admin(Base):
     __tablename__ = "admins"
     id = Column(Integer, primary_key=True, index=True)
     username = Column(String(50), unique=True, nullable=False)
     password = Column(String(255), nullable=False)
+
 
 class User(Base):
     __tablename__ = "users"
@@ -23,6 +30,7 @@ class User(Base):
     username = Column(String(50), unique=True, nullable=False)
     email = Column(String(100), unique=True, nullable=False)
     password = Column(String(255), nullable=False)
+
 
 class Folder(Base):
     __tablename__ = "folders"
@@ -36,6 +44,7 @@ class Folder(Base):
 
     parent = relationship("Folder", remote_side=[id], backref="subfolders")
     documents = relationship("Document", back_populates="folder")
+
 
 class Document(Base):
     __tablename__ = "documents"
@@ -52,8 +61,10 @@ class Document(Base):
 
     folder = relationship("Folder", back_populates="documents")
 
+
 def create_tables():
     Base.metadata.create_all(bind=engine)
+
 
 def get_db():
     db = SessionLocal()
