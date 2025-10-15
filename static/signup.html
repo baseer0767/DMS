@@ -156,7 +156,7 @@
             <button type="submit">Create Account</button>
             
             <div class="login-link">
-                Already have an account? <a href="/static/login.html">Sign in</a>
+                Already have an account? <a href="/">Sign in</a>
             </div>
         </form>
     </div>
@@ -213,7 +213,7 @@ document.getElementById('signupForm').addEventListener('submit', async (e) => {
 
         // ✅ Success - redirect to login page
         alert('Account created successfully! Please login.');
-        window.location.href = '/static/login.html';
+        window.location.href = '/';
 
     } catch (error) {
         console.error('Signup error:', error);
